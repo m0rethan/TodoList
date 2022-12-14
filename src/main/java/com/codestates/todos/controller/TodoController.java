@@ -4,8 +4,9 @@ import com.codestates.todos.dto.TodoPatchDto;
 import com.codestates.todos.dto.TodoPostDto;
 import com.codestates.todos.dto.TodoResponseDto;
 import com.codestates.todos.entity.Todo;
-import com.codestates.todos.mapper.TodoMapper;
+import com.codestates.todos.mapstruct.mapper.TodoMapper;
 import com.codestates.todos.service.TodoService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +14,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@CrossOrigin
 @RestController
-@RequestMapping("/")
+@RequestMapping("/todos")
+@Slf4j
 public class TodoController {
     private final TodoService todoService;
     private final TodoMapper todoMapper;
@@ -26,15 +29,18 @@ public class TodoController {
 
     @PostMapping
     public ResponseEntity postTodo(@RequestBody TodoPostDto todoPostDto) {
+        System.out.println("CREATE");
+
         Todo response = todoService.createTodo(todoMapper.todoPostDtoToTodo(todoPostDto));
 
         return new ResponseEntity(todoMapper.todoToTodoResponseDto(response), HttpStatus.CREATED);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity patchTodo(@PathVariable("id") int id,
+    @PatchMapping("/{todoId}")
+    public ResponseEntity patchTodo(@PathVariable("todoId") Long todoId,
                                     @RequestBody TodoPatchDto todoPatchDto) {
-        todoPatchDto.setId(id);
+        System.out.println("UPDATE");
+        todoPatchDto.setTodoId(todoId);
 
         Todo response = todoService.updateTodo(todoMapper.todoPatchDtoToTodo(todoPatchDto));
 
@@ -43,9 +49,9 @@ public class TodoController {
 
 
     //해당 todo만 조회
-    @GetMapping("/{id}")
-    public ResponseEntity getTodo(@PathVariable("id") int id) {
-        Todo response = todoService.findTodo(id);
+    @GetMapping("/{todoId}")
+    public ResponseEntity getTodo(@PathVariable("todoId") Long todoId) {
+        Todo response = todoService.findTodo(todoId);
         return new ResponseEntity(todoMapper.todoToTodoResponseDto(response), HttpStatus.OK);
     }
 
@@ -64,9 +70,9 @@ public class TodoController {
     }
 
     //해당 todo만 삭제
-    @DeleteMapping("/{id}")
-    public ResponseEntity deleteTodo(@PathVariable("id") int id) {
-        todoService.deleteTodo(id);
+    @DeleteMapping("/{todoId}")
+    public ResponseEntity deleteTodo(@PathVariable("todoId") Long todoId) {
+        todoService.deleteTodo(todoId);
         System.out.println("delete Todo");
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);

@@ -5,15 +5,31 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.*;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
 public class Todo {
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long todoId;
+
+
+    @Column(nullable = false)
     private String title;
+
     private int todo_order;
+
+    @Column(nullable = false)
     private boolean completed;
+
+    public Todo(Long todoId) {
+        this.todoId = todoId;
+    }
+
 }
 /*
 API 계층에서 전달 받은 요청 데이터를 기반으로

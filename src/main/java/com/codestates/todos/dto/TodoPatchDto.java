@@ -8,7 +8,7 @@ import javax.validation.constraints.NotBlank;
 @Getter
 @Setter
 public class TodoPatchDto {
-    private int id;
+    private Long todoId;
 
     @NotBlank
     private String title;
@@ -21,7 +21,7 @@ public class TodoPatchDto {
 
     /*
     setCoffeeId()가 필요한 이유
-    핸들러 메서드에서 path variable로 전달 받은 id를 setId()를 통해
+    핸들러 메서드에서 path variable로 전달 받은 id를 setTodoId()를 통해
     필드를 채움으로써 response body에 포함시킬 수 있습니다.
     */
 }
